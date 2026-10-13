@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="ms-MY">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDPR Cikgu Heryani - Mario Edition 🍄</title>
+    <meta name="theme-color" content="#E52521">
+    <meta name="description" content="Sistem tugasan PdPR Cikgu Heryani untuk murid dan guru.">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Super PdPR">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+    <script src="./date-my.js"></script>
+    <script src="./pwa.js" defer></script>
+    <!-- Gaya, fon dan ikon disertakan secara tempatan untuk PWA. -->
+    <script src="./assets/tailwind.js"></script>
+    <!-- Google Fonts: Press Start 2P (Retro Mario) & Fredoka -->
+    <link href="./assets/fonts.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="./assets/fontawesome.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mario: {
+                            red: '#E52521',
+                            blue: '#00247D',
+                            sky: '#5C94FC',
+                            green: '#43B047',
+                            yellow: '#FCD116',
+                            brick: '#B84A39',
+                            dark: '#1D1D1D',
+                            cloud: '#E0F2FE'
+                        }
+                    },
+                    fontFamily: {
+                        mario: ['"Press Start 2P"', 'cursive'],
+                        body: ['Fredoka', 'sans-serif']
+                    },
+                    animation: {
+                        'bounce-mario': 'bounceMario 0.6s infinite alternate',
+                        'float': 'float 3s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        bounceMario: {
+                            '0%': { transform: 'translateY(0)' },
+                            '100%': { transform: 'translateY(-10px)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        [hidden] { display: none !important; }
+        .connection-notice { padding: 12px 16px; background: #fff3b0; color: #1D1D1D; text-align: center; font-weight: 600; }
+        #updateAppButton { margin-left: 8px; padding: 6px 12px; border: 2px solid #1D1D1D; border-radius: 8px; background: #E52521; color: white; }
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background-color: #5C94FC;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.4) 0%, transparent 20%),
+                radial-gradient(circle at 80% 60%, rgba(255, 255, 255, 0.3) 0%, transparent 25%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        .mario-font {
+            font-family: 'Press Start 2P', cursive;
+        }
+        .mario-card {
+            background: #FFFFFF;
+            border: 4px solid #1D1D1D;
+            box-shadow: 6px 6px 0px #1D1D1D;
+            border-radius: 16px;
+        }
+        .mario-btn-red {
+            background-color: #E52521;
+            color: #FFFFFF;
+            border: 3px solid #1D1D1D;
+            box-shadow: 4px 4px 0px #1D1D1D;
+            transition: all 0.1s ease;
+        }
+        .mario-btn-red:active {
+            transform: translate(3px, 3px);
+            box-shadow: 1px 1px 0px #1D1D1D;
+        }
+        .mario-btn-yellow {
+            background-color: #FCD116;
+            color: #1D1D1D;
+            border: 3px solid #1D1D1D;
+            box-shadow: 4px 4px 0px #1D1D1D;
+            transition: all 0.1s ease;
+        }
+        .mario-btn-yellow:active {
+            transform: translate(3px, 3px);
+            box-shadow: 1px 1px 0px #1D1D1D;
+        }
+        .mario-btn-green {
+            background-color: #43B047;
+            color: #FFFFFF;
+            border: 3px solid #1D1D1D;
+            box-shadow: 4px 4px 0px #1D1D1D;
+            transition: all 0.1s ease;
+        }
+        .mario-btn-green:active {
+            transform: translate(3px, 3px);
+            box-shadow: 1px 1px 0px #1D1D1D;
+        }
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FCD116;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E52521;
+            border: 2px solid #1D1D1D;
+        }
+    </style>
+</head>
+<body class="text-gray-900 pb-12 selection:bg-yellow-300 selection:text-red-600">
+
+    <header class="sticky top-0 z-40 bg-mario-red border-b-4 border-mario-dark shadow-xl text-white">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('murid')">
+                <div class="w-14 h-14 rounded-2xl bg-mario-yellow border-4 border-mario-dark flex items-center justify-center text-mario-dark text-3xl shadow-md transform hover:rotate-6 transition-all">
+                    <i class="fa-solid fa-gamepad animate-bounce-mario"></i>
+                </div>
+                <div>
+                    <h1 class="mario-font text-lg md:text-xl text-yellow-300 drop-shadow-[2px_2px_0px_#1D1D1D]">
+                        SUPER PDPR 🍄
+                    </h1>
+                    <p class="text-xs font-bold text-white flex items-center gap-1 mt-1">
+                        <i class="fa-solid fa-coins text-yellow-300"></i> CIKGU HERYANI WORLD 1-1
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap justify-center items-center gap-2">
+                <button id="installAppButton" onclick="installPDPRApp()" class="px-3 py-1.5 rounded-xl bg-white text-mario-red text-xs font-bold border-2 border-mario-dark shadow">
+                    <i class="fa-solid fa-download"></i> PASANG APP
+                </button>
+                <button id="soundToggleBtn" onclick="toggleSound()" class="px-3 py-1.5 rounded-xl bg-mario-yellow text-mario-dark text-xs font-bold border-2 border-mario-dark flex items-center gap-1.5 shadow">
+                    <i id="soundIcon" class="fa-solid fa-volume-high"></i> <span id="soundText">BUNYI: ON</span>
+                </button>
+                <div id="syncBadge" class="px-3 py-1.5 rounded-xl bg-green-500 text-white text-xs font-bold flex items-center gap-1 border-2 border-mario-dark shadow">
+                    <i id="syncIcon" class="fa-solid fa-cloud-arrow-down animate-pulse"></i> <span id="syncText">MENGAMBIL DATA...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto px-4 mt-2 flex justify-center md:justify-start gap-2 overflow-x-auto pb-2">
+            <button id="tabBtnMurid" onclick="switchTab('murid')" class="mario-font text-xs px-5 py-3 rounded-t-xl font-bold transition-all flex items-center gap-2 bg-mario-yellow text-mario-dark border-2 border-b-0 border-mario-dark">
+                <i class="fa-solid fa-user-ninja"></i> SAYA MURID
+            </button>
+            <button id="tabBtnGuru" onclick="switchTab('guru')" class="mario-font text-xs px-5 py-3 rounded-t-xl font-bold transition-all flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 border-2 border-b-0 border-mario-dark">
+                <i class="fa-solid fa-crown text-yellow-300"></i> GURU 🔒
+            </button>
+            <button id="tabBtnRekod" onclick="switchTab('rekod')" class="mario-font text-xs px-5 py-3 rounded-t-xl font-bold transition-all flex items-center gap-2 bg-mario-green text-white hover:bg-green-700 border-2 border-b-0 border-mario-dark">
+                <i class="fa-solid fa-clipboard-check"></i> REKOD TUGASAN 🔒
+            </button>
+        </div>
+    </header>
+
+    <div id="offlineNotice" hidden role="status" class="connection-notice">
+        Tiada internet. Sambungkan internet untuk memuatkan data dan menghantar tugasan.
+    </div>
+    <div id="updateNotice" hidden role="status" class="connection-notice">
+        Versi baharu tersedia. Simpan kerja dahulu.
+        <button id="updateAppButton" type="button">Kemas kini aplikasi</button>
+    </div>
+    <main class="max-w-6xl mx-auto px-4 py-6">
+
+        <section id="tabContentMurid" class="space-y-6">
+            
+            <div class="mario-card p-6 relative overflow-hidden bg-gradient-to-br from-yellow-100 to-white">
+                <div class="absolute -right-4 -bottom-4 text-yellow-300 opacity-40 pointer-events-none">
+                    <i class="fa-solid fa-star text-9xl"></i>
+                </div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="w-8 h-8 rounded-lg bg-mario-red text-white flex items-center justify-center font-bold text-lg border-2 border-mario-dark">1</span>
+                        <h2 class="mario-font text-sm text-mario-red">
+                            PILIH KELAS & NAMA MURID (LIVE DARI GOOGLE SHEET)
+                        </h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-800 mb-1.5 uppercase">
+                                <i class="fa-solid fa-school text-mario-red"></i> 1. Pilih Kelas Anda:
+                            </label>
+                            <select id="studentClassSelect" onchange="onClassSelected()" class="w-full px-4 py-3 rounded-xl border-3 border-mario-dark font-bold text-gray-800 bg-white shadow-sm focus:ring-2 focus:ring-yellow-400 outline-none">
+                                <option value="">-- MEMUATKAN KELAS FROM GOOGLE SHEET... --</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-800 mb-1.5 uppercase">
+                                <i class="fa-solid fa-id-card text-blue-600"></i> 2. Pilih Nama Murid:
+                            </label>
+                            <select id="studentNameSelect" onchange="onStudentSelected()" class="w-full px-4 py-3 rounded-xl border-3 border-mario-dark font-bold text-gray-800 bg-white shadow-sm focus:ring-2 focus:ring-yellow-400 outline-none" disabled>
+                                <option value="">-- Sila pilih kelas dahulu --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="studentWelcomeBanner" class="hidden mt-5 p-4 rounded-2xl bg-mario-yellow border-3 border-mario-dark flex items-center justify-between shadow-md">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-xl bg-mario-red text-yellow-300 border-2 border-mario-dark flex items-center justify-center text-2xl font-bold shadow">
+                                <i class="fa-solid fa-hat-cowboy"></i>
+                            </div>
+                            <div>
+                                <h3 id="welcomeStudentName" class="mario-font text-xs text-mario-dark"></h3>
+                                <p id="welcomeStudentClass" class="text-xs text-mario-red font-bold mt-1"></p>
+                            </div>
+                        </div>
+                        <span class="px-4 py-2 bg-mario-green text-white rounded-xl text-xs font-bold border-2 border-mario-dark shadow">
+                            <i class="fa-solid fa-bolt text-yellow-300"></i> LETS GO MARIO!
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="studentTaskSection" class="hidden space-y-4">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border-3 border-mario-dark shadow">
+                    <h2 class="mario-font text-xs text-blue-700 flex items-center gap-2">
+                        <i class="fa-solid fa-box-archive text-mario-yellow"></i> SENARAI TUGASAN KAMU
+                    </h2>
+                    <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                        <!-- Penapis Tarikh Murid -->
+                        <div class="flex items-center gap-1.5 bg-yellow-100 p-1.5 rounded-xl border-2 border-mario-dark text-xs font-bold">
+                            <i class="fa-solid fa-calendar-days text-mario-red ml-1"></i>
+                            <span class="text-[11px] font-bold text-gray-800 hidden sm:inline">Tarikh:</span>
+                            <input type="date" id="studentDateFilter" onchange="renderStudentTaskList()" class="px-2 py-1 rounded-lg border border-mario-dark text-xs font-bold bg-white outline-none focus:ring-2 focus:ring-mario-red">
+                            <button onclick="clearStudentDateFilter()" title="Set Semula Tarikh" class="px-2 py-1 bg-mario-red text-white rounded-lg text-xs font-bold border border-mario-dark hover:bg-red-700">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button onclick="filterStudentTasks('all')" id="btnFilterAll" class="mario-btn-yellow px-3 py-1.5 rounded-lg text-xs font-bold">SEMUA</button>
+                            <button onclick="filterStudentTasks('pending')" id="btnFilterPending" class="bg-white text-gray-700 border-2 border-mario-dark px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-yellow-100">BELUM SIAP</button>
+                            <button onclick="filterStudentTasks('done')" id="btnFilterDone" class="bg-white text-gray-700 border-2 border-mario-dark px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-yellow-100">SELESAI</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="studentTaskList" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- Cards will be populated here dynamically -->
+                </div>
+            </div>
+
+            <div id="studentPromptCard" class="mario-card p-12 text-center text-gray-600 bg-white">
+                <div class="w-20 h-20 mx-auto rounded-2xl bg-mario-yellow border-3 border-mario-dark flex items-center justify-center text-4xl text-mario-dark mb-4 animate-bounce-mario">
+                    <i class="fa-solid fa-question"></i>
+                </div>
+                <h3 class="mario-font text-xs text-mario-red">SILA PILIH KELAS & NAMA ANDA</h3>
+                <p class="text-sm font-semibold text-gray-600 mt-2">Data nama dan kelas diisi secara live dari Google Sheet Cikgu!</p>
+            </div>
+
+        </section>
+
+        <section id="tabContentGuru" class="hidden space-y-6">
+            
+            <div id="guruLockScreen" class="mario-card p-8 max-w-md mx-auto text-center bg-white my-8">
+                <div class="w-20 h-20 mx-auto rounded-2xl bg-mario-red text-yellow-300 border-3 border-mario-dark flex items-center justify-center text-4xl mb-4 shadow">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+                <h2 class="mario-font text-xs text-mario-red">LOG MASUK GURU</h2>
+                <p class="text-xs font-semibold text-gray-600 mb-6 mt-2">Masukkan Kata Laluan Guru (Default: JBA1077)</p>
+
+                <form onsubmit="handleGuruLogin(event)" class="space-y-4">
+                    <div>
+                        <input type="password" id="guruPasswordInput" placeholder="KATA LALUAN" class="w-full px-4 py-3 rounded-xl border-3 border-mario-dark text-center font-bold text-lg outline-none focus:ring-2 focus:ring-yellow-400">
+                    </div>
+                    <p id="loginErrorMsg" class="text-xs font-bold text-mario-red hidden"><i class="fa-solid fa-triangle-exclamation"></i> Kata laluan salah!</p>
+                    <button type="submit" class="mario-btn-red w-full py-3.5 rounded-xl mario-font text-xs">
+                        <i class="fa-solid fa-unlock"></i> MASUK MODUL GURU
+                    </button>
+                </form>
+            </div>
+
+            <div id="guruDashboard" class="hidden space-y-6">
+                <div class="mario-card p-6 bg-mario-red text-white border-3 border-mario-dark flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <span class="px-3 py-1 rounded-lg bg-mario-yellow text-mario-dark text-xs font-bold border-2 border-mario-dark">CIKGU HERYANI WORLD 👑</span>
+                        <h2 class="mario-font text-sm text-yellow-300 mt-2">PANEL PENGURUSAN TUGASAN</h2>
+                        <p class="text-xs font-semibold text-white/90 mt-1">Cipta tugasan baru & semak bukti gambar murid dari Google Drive.</p>
+                    </div>
+                    <button onclick="lockGuruSession()" class="mario-btn-yellow px-4 py-2 rounded-xl text-xs font-bold">
+                        <i class="fa-solid fa-lock"></i> KUNCI
+                    </button>
+                </div>
+
+                <div class="flex gap-2 border-b-4 border-mario-dark pb-2 overflow-x-auto">
+                    <button id="guruSubTabCreate" onclick="switchGuruSubTab('create')" class="mario-btn-red px-5 py-2.5 rounded-xl text-xs font-bold">
+                        <i class="fa-solid fa-plus-circle"></i> CIPTA TUGASAN BARU
+                    </button>
+                    <button id="guruSubTabReview" onclick="switchGuruSubTab('review')" class="bg-white text-mario-dark border-3 border-mario-dark px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-yellow-100">
+                        <i class="fa-solid fa-star text-yellow-500"></i> SEMAK HASIL MURID (<span id="pendingGradeCount">0</span>)
+                    </button>
+                </div>
+
+                <!-- Create Task Form -->
+                <div id="guruSectionCreate" class="mario-card p-6 bg-white space-y-4">
+                    <h3 class="mario-font text-xs text-mario-red flex items-center gap-2">
+                        <i class="fa-solid fa-pen-ruler"></i> BORANG TAMBAH TUGASAN BARU
+                    </h3>
+
+                    <form onsubmit="handleCreateTask(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-800 mb-1">
+                                    <i class="fa-solid fa-calendar text-mario-red"></i> Tarikh Tugasan:
+                                </label>
+                                <input type="date" id="taskDate" required class="w-full px-4 py-2.5 rounded-xl border-2 border-mario-dark text-xs font-bold outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-800 mb-1">
+                                    <i class="fa-solid fa-book text-blue-600"></i> Subjek:
+                                </label>
+                                <select id="taskSubject" required class="w-full px-4 py-2.5 rounded-xl border-2 border-mario-dark text-xs font-bold outline-none bg-white">
+                                    <option value="">-- Pilih Subjek --</option>
+                                    <option value="Bahasa Melayu">Bahasa Melayu</option>
+                                    <option value="Bahasa Inggeris">Bahasa Inggeris</option>
+                                    <option value="Matematik">Matematik</option>
+                                    <option value="Sains">Sains</option>
+                                    <option value="Pendidikan Islam">Pendidikan Islam</option>
+                                    <option value="Pendidikan Moral">Pendidikan Moral</option>
+                                    <option value="Pendidikan Seni Visual">Pendidikan Seni Visual</option>
+                                    <option value="Reka Bentuk & Teknologi">Reka Bentuk & Teknologi</option>
+                                    <option value="Sejarah">Sejarah</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-800 mb-1">
+                                    <i class="fa-solid fa-users text-green-600"></i> Pilih Kelas Target:
+                                </label>
+                                <select id="taskClass" required class="w-full px-4 py-2.5 rounded-xl border-2 border-mario-dark text-xs font-bold outline-none bg-white">
+                                    <option value="Semua Kelas">Semua Kelas</option>
+                                    <!-- Dynamic Class List -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-800 mb-1">
+                                <i class="fa-solid fa-heading text-mario-red"></i> Tajuk Utama / Topik Tugasan:
+                            </label>
+                            <input type="text" id="taskTitle" placeholder="Contoh: World 1-1: Kata Nama Khas & Am" required class="w-full px-4 py-2.5 rounded-xl border-2 border-mario-dark text-xs font-bold outline-none">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-800 mb-1">
+                                    <i class="fa-brands fa-youtube text-red-600"></i> Pautan Digital / Quiz / Video (YouTube / Wordwall):
+                                </label>
+                                <input type="url" id="taskDigitalLink" placeholder="https://..." class="w-full px-4 py-2.5 rounded-xl border-2 border-mario-dark text-xs font-semibold outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-800 mb-1">
+                                    <i class="fa-solid fa-book-open text-mario-yellow"></i> Arahan Buku Aktiviti / Kerja:
+                                </label>
+                                <input type="text" id="taskBookInstructions" placeholder="Buku Aktiviti Muka Surat 24-25..." class="w-full px-4 py-2.5 rounded-xl border-2 border-mario-dark text-xs font-semibold outline-none">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-800 mb-1">
+                                <i class="fa-solid fa-comment-dots text-purple-600"></i> Pesanan / Catatan Cikgu Heryani:
+                            </label>
+                            <input type="text" id="taskNotes" placeholder="Pesanan khas untuk murid..." class="w-full px-4 py-2.5 rounded-xl border-2 border-mario-dark text-xs font-bold outline-none">
+                        </div>
+
+                        <button type="submit" id="btnSubmitTask" class="mario-btn-green w-full py-3.5 rounded-xl mario-font text-xs flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> TERBITKAN TUGASAN KE GOOGLE SHEET
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Review & Grade Submissions -->
+                <div id="guruSectionReview" class="hidden mario-card p-6 bg-white space-y-4">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b-2 border-mario-dark pb-3">
+                        <h3 class="mario-font text-xs text-mario-dark flex items-center gap-2">
+                            <i class="fa-solid fa-clipboard-check text-mario-red"></i> SEMAK BUKTI GAMBAR & BERI BINTANG 🌟
+                        </h3>
+
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-gray-700">Tapis Kelas:</span>
+                            <select id="reviewClassFilter" onchange="renderGuruReviewList()" class="px-3 py-1.5 rounded-lg border-2 border-mario-dark text-xs font-bold bg-white">
+                                <option value="ALL">Semua Kelas</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="guruReviewContainer" class="space-y-4">
+                        <!-- Dynamic Submissions Review List -->
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section id="tabContentRekod" class="hidden space-y-6">
+            
+            <div id="rekodLockScreen" class="mario-card p-8 max-w-md mx-auto text-center bg-white my-8">
+                <div class="w-20 h-20 mx-auto rounded-2xl bg-mario-green text-yellow-300 border-3 border-mario-dark flex items-center justify-center text-4xl mb-4 shadow">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h2 class="mario-font text-xs text-mario-green">AKSES REKOD KESELURUHAN</h2>
+                <p class="text-xs font-semibold text-gray-600 mb-6 mt-2">Masukkan Kata Laluan Guru (Default: JBA1077)</p>
+
+                <form onsubmit="handleRekodLogin(event)" class="space-y-4">
+                    <div>
+                        <input type="password" id="rekodPasswordInput" placeholder="KATA LALUAN" class="w-full px-4 py-3 rounded-xl border-3 border-mario-dark text-center font-bold text-lg outline-none focus:ring-2 focus:ring-green-400">
+                    </div>
+                    <p id="rekodLoginErrorMsg" class="text-xs font-bold text-mario-red hidden"><i class="fa-solid fa-triangle-exclamation"></i> Kata laluan salah!</p>
+                    <button type="submit" class="mario-btn-green w-full py-3.5 rounded-xl mario-font text-xs">
+                        <i class="fa-solid fa-unlock"></i> BUKA LAPORAN FULL
+                    </button>
+                </form>
+            </div>
+
+            <div id="rekodDashboard" class="hidden space-y-6">
+                <div class="mario-card p-6 bg-mario-green text-white border-3 border-mario-dark flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <span class="px-3 py-1 rounded-lg bg-mario-yellow text-mario-dark text-xs font-bold border-2 border-mario-dark">LAPORAN PENUH GOOGLE SHEET 📊</span>
+                        <h2 class="mario-font text-sm text-yellow-300 mt-2">REKOD TUGASAN & PENGHANTARAN</h2>
+                    </div>
+                    <button onclick="exportToCSV()" class="mario-btn-yellow px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-file-excel"></i> MUAT TURUN CSV
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="mario-card p-4 bg-yellow-100 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-mario-red text-yellow-300 border-2 border-mario-dark flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-box"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-700 uppercase">Jumlah Tugasan</p>
+                            <h3 id="statTotalTasks" class="mario-font text-lg text-mario-dark">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="mario-card p-4 bg-green-100 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-mario-green text-white border-2 border-mario-dark flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-check-double"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-700 uppercase">Jumlah Penghantaran</p>
+                            <h3 id="statTotalSubmissions" class="mario-font text-lg text-mario-dark">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="mario-card p-4 bg-blue-100 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-600 text-yellow-300 border-2 border-mario-dark flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-700 uppercase">Bintang Diberi</p>
+                            <h3 id="statTotalStars" class="mario-font text-lg text-mario-dark">0 ⭐</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mario-card p-6 bg-white overflow-hidden space-y-4">
+                    <h3 class="mario-font text-xs text-mario-dark flex items-center gap-2">
+                        <i class="fa-solid fa-table"></i> JADUAL REKOD TERPERINCI
+                    </h3>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[700px]">
+                            <thead>
+                                <tr class="bg-mario-yellow text-mario-dark text-xs font-bold uppercase border-b-3 border-mario-dark">
+                                    <th class="p-3">Tarikh</th>
+                                    <th class="p-3">Subjek</th>
+                                    <th class="p-3">Kelas</th>
+                                    <th class="p-3">Tajuk Tugasan</th>
+                                    <th class="p-3">Jumlah Hantar</th>
+                                    <th class="p-3 text-center">Tindakan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rekodTableBody" class="divide-y-2 divide-gray-200 text-xs font-semibold">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- MODAL: Student Submit Task Work -->
+    <div id="submitModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="mario-card bg-white max-w-lg w-full p-6 relative animate-float">
+            <button onclick="closeSubmitModal()" class="absolute top-4 right-4 w-9 h-9 rounded-xl bg-mario-red text-white border-2 border-mario-dark flex items-center justify-center font-bold">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-4">
+                <span class="px-3 py-1 rounded-lg bg-mario-yellow text-mario-dark font-bold text-xs border-2 border-mario-dark">
+                    <i class="fa-solid fa-upload"></i> HANTAR BUKTI KERJA
+                </span>
+                <h3 id="modalTaskTitle" class="mario-font text-xs text-mario-red mt-3"></h3>
+                <p id="modalTaskSubject" class="text-xs font-bold text-blue-600 mt-1"></p>
+            </div>
+
+            <form onsubmit="handleStudentWorkSubmit(event)" class="space-y-4">
+                <input type="hidden" id="modalTaskId">
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-800 mb-1">
+                        <i class="fa-solid fa-pen"></i> Jawapan / Catatan Murid:
+                    </label>
+                    <textarea id="studentNoteInput" rows="3" placeholder="Tuliskan jawapan atau mesej untuk Cikgu Heryani..." required class="w-full px-4 py-2.5 rounded-xl border-2 border-mario-dark text-xs font-semibold outline-none"></textarea>
+                </div>
+
+                <div class="p-4 rounded-xl bg-green-50 border-2 border-mario-dark space-y-2">
+                    <label class="block text-xs font-bold text-green-900 flex items-center gap-1.5">
+                        <i class="fa-solid fa-camera text-green-600 text-sm"></i> Tangkap Gambar / Muat Naik Bukti Kerja (Google Drive):
+                    </label>
+                    <input type="file" id="studentFileInput" accept="image/*" onchange="handleFilePreview(this)" class="block w-full text-xs text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-2 file:border-mario-dark file:text-xs file:font-bold file:bg-mario-yellow file:text-mario-dark hover:file:bg-yellow-400 cursor-pointer">
+
+                    <div id="imagePreviewBox" class="hidden mt-3 text-center">
+                        <p class="text-[11px] font-bold text-mario-green mb-1"><i class="fa-solid fa-check-circle"></i> Pratinjau Gambar:</p>
+                        <img id="imagePreviewElement" src="" alt="Bukti murid" class="max-h-40 mx-auto rounded-xl border-2 border-mario-dark shadow object-cover">
+                    </div>
+                </div>
+
+                <button type="submit" id="btnSubmitWorkModal" class="mario-btn-green w-full py-3.5 rounded-xl mario-font text-xs flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> HANTAR KEPADA CIKGU HERYANI
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SUCCESS CELEBRATION MODAL -->
+    <div id="successCelebrationModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="mario-card bg-yellow-100 max-w-sm w-full p-6 text-center relative border-4 border-mario-dark">
+            <div class="w-20 h-20 mx-auto rounded-2xl bg-mario-red text-yellow-300 border-3 border-mario-dark flex items-center justify-center text-4xl mb-3 shadow-lg animate-bounce-mario">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            
+            <h3 class="mario-font text-sm text-mario-red">STAGE CLEAR! 🎉</h3>
+            <p class="text-xs font-bold text-gray-800 mt-2">Tugasan Berjaya Dihantar Ke Google Sheet & Drive!</p>
+            <p class="text-xs font-semibold text-gray-600 mt-2">Syabas murid rajin! Cikgu Heryani akan menyemak jawapan anda tidak lama lagi. ⭐</p>
+
+            <div class="my-4 p-3 rounded-xl bg-white border-2 border-mario-dark flex justify-center gap-1 text-2xl text-yellow-400">
+                <i class="fa-solid fa-star animate-bounce"></i>
+                <i class="fa-solid fa-star animate-bounce"></i>
+                <i class="fa-solid fa-star animate-bounce"></i>
+                <i class="fa-solid fa-star animate-bounce"></i>
+                <i class="fa-solid fa-star animate-bounce"></i>
+            </div>
+
+            <button onclick="closeSuccessModal()" class="mario-btn-red w-full py-3 rounded-xl mario-font text-xs">
+                SAMA-SAMA / TERUSKAN 🍄
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURATION & API URLs
+        const APPSCRIPT_URL = "https://script.google.com/macros/s/AKfycby0oGaGIqkyWsK8OSGQrJbu7n8BsEpdHXtPyQ7sItmFxEJhaZbPjXtFBGLii4BjZaKqAg/exec";
+        const CSV_STUDENTS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTAO3fGS9hKw3VWeZg8Bgq2VDxl5m5s-PWDWk5hr2vOU6NAtB5SNslCHjTlecw91szyTNyWA5UhGsd1/pub?gid=0&single=true&output=csv";
+        const TEACHER_PASSWORD = "JBA1077";
+
+        // Pemformat tarikh Malaysia berada dalam date-my.js.
+
+        function clearStudentDateFilter() {
+            playSound('jump');
+            const dateInput = document.getElementById('studentDateFilter');
+            if (dateInput) dateInput.value = '';
+            renderStudentTaskList();
+        }
+
+        // Global State
+        let STUDENT_DATABASE = {};
+        let soundEnabled = true;
+        let isGuruLoggedIn = false;
+        let isRekodLoggedIn = false;
+        let activeStudent = { class: '', name: '' };
+        let studentTaskFilter = 'all';
+
+        let tasks = [];
+        let submissions = [];
+
+        // Audio Synth (Mario retro sound effects)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'coin') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(987.77, now); // B5
+                    osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'jump') {
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(150, now);
+                    osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
+                    osc.start(now);
+                    osc.stop(now + 0.15);
+                } else if (type === 'star' || type === 'stageclear') {
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, idx) => {
+                        const noteOsc = audioCtx.createOscillator();
+                        const noteGain = audioCtx.createGain();
+                        noteOsc.connect(noteGain);
+                        noteGain.connect(audioCtx.destination);
+                        noteOsc.type = 'triangle';
+                        noteOsc.frequency.setValueAtTime(freq, now + (idx * 0.1));
+                        noteGain.gain.setValueAtTime(0.3, now + (idx * 0.1));
+                        noteGain.gain.exponentialRampToValueAtTime(0.01, now + (idx * 0.1) + 0.2);
+                        noteOsc.start(now + (idx * 0.1));
+                        noteOsc.stop(now + (idx * 0.1) + 0.2);
+                    });
+                }
+            } catch (e) {
+                console.log("Audio not supported or blocked.");
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundText').innerText = soundEnabled ? 'BUNYI: ON' : 'BUNYI: OFF';
+            document.getElementById('soundIcon').className = soundEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+        }
+
+        // INITIALIZATION
+        window.addEventListener('DOMContentLoaded', () => {
+            // Set current date on teacher task form
+            const today = malaysiaDateKey(new Date());
+            document.getElementById('taskDate').value = today;
+
+            // Fetch CSV student database & Apps Script Backend Data
+            fetchStudentCSV();
+            fetchDataFromAppsScript();
+        });
+
+        // FETCH CSV STUDENT LIST FROM GOOGLE SHEET
+        async function fetchStudentCSV() {
+            try {
+                const response = await fetch(CSV_STUDENTS_URL);
+                const csvText = await response.text();
+                parseStudentCSV(csvText);
+            } catch (err) {
+                console.error("Error loading student CSV:", err);
+                document.getElementById('studentClassSelect').innerHTML = `<option value="">-- RALAT MEMUATKAN KELAS --</option>`;
+            }
+        }
+
+        function parseStudentCSV(csvText) {
+            const lines = csvText.split(/\r?\n/);
+            STUDENT_DATABASE = {};
+
+            for (let i = 0; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                // Parse CSV columns [KELAS, NAMA MURID]
+                const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+                if (cols.length >= 2) {
+                    const className = cols[0];
+                    const studentName = cols[1];
+
+                    // Header guard
+                    if (className.toUpperCase() === 'KELAS' || studentName.toUpperCase().includes('NAMA')) continue;
+
+                    if (!STUDENT_DATABASE[className]) {
+                        STUDENT_DATABASE[className] = [];
+                    }
+                    if (!STUDENT_DATABASE[className].includes(studentName)) {
+                        STUDENT_DATABASE[className].push(studentName);
+                    }
+                }
+            }
+
+            populateClassDropdowns();
+        }
+
+        function populateClassDropdowns() {
+            const classSelect = document.getElementById('studentClassSelect');
+            const taskClassSelect = document.getElementById('taskClass');
+            const reviewFilterSelect = document.getElementById('reviewClassFilter');
+
+            const classes = Object.keys(STUDENT_DATABASE).sort();
+
+            if (classes.length === 0) {
+                classSelect.innerHTML = `<option value="">-- TIADA KELAS DITEMUI --</option>`;
+                return;
+            }
+
+            classSelect.innerHTML = `<option value="">-- PILIH KELAS ANDA --</option>`;
+            taskClassSelect.innerHTML = `<option value="Semua Kelas">Semua Kelas</option>`;
+            reviewFilterSelect.innerHTML = `<option value="ALL">Semua Kelas</option>`;
+
+            classes.forEach(cls => {
+                classSelect.innerHTML += `<option value="${cls}">${cls}</option>`;
+                taskClassSelect.innerHTML += `<option value="${cls}">${cls}</option>`;
+                reviewFilterSelect.innerHTML += `<option value="${cls}">${cls}</option>`;
+            });
+        }
+
+        function onClassSelected() {
+            playSound('jump');
+            const selectedClass = document.getElementById('studentClassSelect').value;
+            const studentSelect = document.getElementById('studentNameSelect');
+
+            if (!selectedClass || !STUDENT_DATABASE[selectedClass]) {
+                studentSelect.disabled = true;
+                studentSelect.innerHTML = `<option value="">-- Sila pilih kelas dahulu --</option>`;
+                document.getElementById('studentWelcomeBanner').classList.add('hidden');
+                document.getElementById('studentTaskSection').classList.add('hidden');
+                document.getElementById('studentPromptCard').classList.remove('hidden');
+                return;
+            }
+
+            const names = STUDENT_DATABASE[selectedClass].sort();
+            studentSelect.disabled = false;
+            studentSelect.innerHTML = `<option value="">-- PILIH NAMA MURID --</option>`;
+            names.forEach(name => {
+                studentSelect.innerHTML += `<option value="${name}">${name}</option>`;
+            });
+        }
+
+        function onStudentSelected() {
+            playSound('coin');
+            const selectedClass = document.getElementById('studentClassSelect').value;
+            const selectedName = document.getElementById('studentNameSelect').value;
+
+            if (!selectedName) {
+                document.getElementById('studentWelcomeBanner').classList.add('hidden');
+                document.getElementById('studentTaskSection').classList.add('hidden');
+                document.getElementById('studentPromptCard').classList.remove('hidden');
+                return;
+            }
+
+            activeStudent = { class: selectedClass, name: selectedName };
+
+            document.getElementById('welcomeStudentName').innerText = selectedName;
+            document.getElementById('welcomeStudentClass').innerText = `KELAS: ${selectedClass}`;
+            document.getElementById('studentWelcomeBanner').classList.remove('hidden');
+
+            document.getElementById('studentPromptCard').classList.add('hidden');
+            document.getElementById('studentTaskSection').classList.remove('hidden');
+
+            renderStudentTaskList();
+        }
+
+        function switchTab(tab) {
+            playSound('jump');
+            document.getElementById('tabContentMurid').classList.add('hidden');
+            document.getElementById('tabContentGuru').classList.add('hidden');
+            document.getElementById('tabContentRekod').classList.add('hidden');
+
+            document.getElementById('tabBtnMurid').className = "mario-font text-xs px-5 py-3 rounded-t-xl font-bold transition-all flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 border-2 border-b-0 border-mario-dark";
+            document.getElementById('tabBtnGuru').className = "mario-font text-xs px-5 py-3 rounded-t-xl font-bold transition-all flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 border-2 border-b-0 border-mario-dark";
+            document.getElementById('tabBtnRekod').className = "mario-font text-xs px-5 py-3 rounded-t-xl font-bold transition-all flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 border-2 border-b-0 border-mario-dark";
+
+            if (tab === 'murid') {
+                document.getElementById('tabContentMurid').classList.remove('hidden');
+                document.getElementById('tabBtnMurid').className = "mario-font text-xs px-5 py-3 rounded-t-xl font-bold transition-all flex items-center gap-2 bg-mario-yellow text-mario-dark border-2 border-b-0 border-mario-dark";
+            } else if (tab === 'guru') {
+                document.getElementById('tabContentGuru').classList.remove('hidden');
+                document.getElementById('tabBtnGuru').className = "mario-font text-xs px-5 py-3 rounded-t-xl font-bold transition-all flex items-center gap-2 bg-mario-yellow text-mario-dark border-2 border-b-0 border-mario-dark";
+            } else if (tab === 'rekod') {
+                document.getElementById('tabContentRekod').classList.remove('hidden');
+                document.getElementById('tabBtnRekod').className = "mario-font text-xs px-5 py-3 rounded-t-xl font-bold transition-all flex items-center gap-2 bg-mario-yellow text-mario-dark border-2 border-b-0 border-mario-dark";
+            }
+        }
+
+        function filterStudentTasks(type) {
+            playSound('jump');
+            studentTaskFilter = type;
+            renderStudentTaskList();
+        }
+
+        // RENDER STUDENT TASKS
+        function renderStudentTaskList() {
+            const container = document.getElementById('studentTaskList');
+            if (!container) return;
+
+            const dateFilter = document.getElementById('studentDateFilter') ? document.getElementById('studentDateFilter').value : '';
+
+            const filteredTasks = tasks.filter(t => {
+                const classMatch = (t.targetClass === 'Semua Kelas' || t.targetClass === activeStudent.class);
+                const dateMatch = !dateFilter || malaysiaDateKey(t.date) === dateFilter;
+                return classMatch && dateMatch;
+            });
+
+            if (filteredTasks.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full mario-card p-8 text-center bg-white text-gray-700">
+                        <i class="fa-solid fa-box-open text-4xl text-mario-yellow mb-2"></i>
+                        <p class="font-bold">Tiada tugasan ditemui untuk kelas ${activeStudent.class} ${dateFilter ? 'pada tarikh ' + formatDateMY(dateFilter) : ''}.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+
+            filteredTasks.forEach(task => {
+                const sub = submissions.find(s => s.taskId === task.id && s.studentName === activeStudent.name && s.studentClass === activeStudent.class);
+                const isCompleted = !!sub;
+
+                if (studentTaskFilter === 'pending' && isCompleted) return;
+                if (studentTaskFilter === 'done' && !isCompleted) return;
+
+                const card = document.createElement('div');
+                card.className = `mario-card p-5 border-3 border-mario-dark space-y-3 ${isCompleted ? 'bg-green-50 border-green-600' : 'bg-white'}`;
+
+                let mediaContentHtml = '';
+                if (task.digitalLink) {
+                    mediaContentHtml += `
+                        <div class="p-3 bg-red-50 rounded-xl border-2 border-mario-dark">
+                            <p class="text-xs font-bold text-mario-red flex items-center gap-1.5 mb-1">
+                                <i class="fa-brands fa-youtube text-red-600"></i> Video / Quiz Digital:
+                            </p>
+                            <a href="${task.digitalLink}" target="_blank" class="mario-btn-red inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold">
+                                <i class="fa-solid fa-play"></i> Buka Pautan Tugasan
+                            </a>
+                        </div>
+                    `;
+                }
+
+                if (task.bookInstructions) {
+                    mediaContentHtml += `
+                        <div class="p-3 bg-yellow-50 rounded-xl border-2 border-mario-dark">
+                            <p class="text-xs font-bold text-mario-dark flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-book-open text-mario-red"></i> Latihan Buku:
+                            </p>
+                            <p class="text-xs text-gray-800 font-semibold">${task.bookInstructions}</p>
+                        </div>
+                    `;
+                }
+
+                let submissionStatusHtml = '';
+                if (isCompleted) {
+                    let starsHtml = '';
+                    if (sub.stars && sub.stars > 0) {
+                        for (let i = 1; i <= 5; i++) {
+                            if (i <= sub.stars) {
+                                starsHtml += `<i class="fa-solid fa-star text-yellow-400"></i>`;
+                            } else {
+                                starsHtml += `<i class="fa-regular fa-star text-gray-300"></i>`;
+                            }
+                        }
+                    }
+
+                    submissionStatusHtml = `
+                        <div class="mt-4 pt-3 border-t-2 border-mario-dark space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="px-3 py-1 rounded-lg bg-mario-green text-white text-xs font-bold border-2 border-mario-dark">
+                                    <i class="fa-solid fa-check-circle"></i> TUGASAN SELESAI
+                                </span>
+                                <span class="text-[10px] font-bold text-gray-500">${formatDateMY(sub.submitDate)}</span>
+                            </div>
+                            <p class="text-xs text-gray-800 font-semibold"><strong>Catatan:</strong> ${sub.note || '-'}</p>
+                            ${sub.imageUrl ? `<a href="${sub.imageUrl}" target="_blank" class="text-xs text-blue-600 font-bold underline"><i class="fa-solid fa-image"></i> Lihat Bukti Gambar (Google Drive)</a>` : ''}
+                            
+                            ${sub.stars ? `
+                                <div class="mt-2 p-3 bg-yellow-100 rounded-xl border-2 border-mario-dark">
+                                    <p class="text-xs font-bold text-mario-dark flex items-center gap-1">
+                                        <i class="fa-solid fa-award text-mario-red"></i> Penilaian Cikgu Heryani:
+                                    </p>
+                                    <div class="text-lg my-1">${starsHtml}</div>
+                                    <p class="text-xs text-gray-800 italic">"${sub.feedback || 'Syabas!'}"</p>
+                                </div>
+                            ` : `
+                                <p class="text-xs font-bold text-mario-dark bg-yellow-200 p-2 rounded-lg text-center border border-mario-dark">
+                                    <i class="fa-solid fa-hourglass-half"></i> Menunggu Cikgu Heryani semak
+                                </p>
+                            `}
+                        </div>
+                    `;
+                } else {
+                    submissionStatusHtml = `
+                        <div class="mt-4 pt-3 border-t-2 border-mario-dark flex justify-between items-center">
+                            <span class="text-xs font-bold text-mario-red flex items-center gap-1">
+                                <i class="fa-solid fa-clock"></i> Belum Dihantar
+                            </span>
+                            <button onclick="openSubmitModal('${task.id}', '${task.title.replace(/'/g, "\\'")}', '${task.subject}')" class="mario-btn-green px-4 py-2 rounded-xl text-xs font-bold">
+                                <i class="fa-solid fa-upload"></i> Jawab & Hantar
+                            </button>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-2">
+                        <span class="px-3 py-1 rounded-lg bg-mario-red text-white text-xs font-bold border border-mario-dark">
+                            ${task.subject}
+                        </span>
+                        <span class="text-xs font-bold text-gray-600 bg-yellow-100 px-2 py-1 rounded-md border border-mario-dark">
+                            <i class="fa-solid fa-calendar text-mario-red"></i> ${formatDateMY(task.date)}
+                        </span>
+                    </div>
+
+                    <h3 class="mario-font text-xs text-mario-dark mt-2">${task.title}</h3>
+                    <p class="text-xs text-gray-600 font-bold">Kelas Target: <span class="text-blue-600">${task.targetClass}</span></p>
+
+                    ${mediaContentHtml}
+
+                    ${task.notes ? `<p class="text-xs text-gray-600 italic"><i class="fa-solid fa-comment text-mario-yellow"></i> ${task.notes}</p>` : ''}
+
+                    ${submissionStatusHtml}
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // SUBMIT WORK MODAL HANDLERS
+        function openSubmitModal(taskId, title, subject) {
+            playSound('coin');
+            document.getElementById('modalTaskId').value = taskId;
+            document.getElementById('modalTaskTitle').innerText = title;
+            document.getElementById('modalTaskSubject').innerText = `Subjek: ${subject}`;
+            document.getElementById('studentNoteInput').value = '';
+            document.getElementById('studentFileInput').value = '';
+            document.getElementById('imagePreviewBox').classList.add('hidden');
+
+            document.getElementById('submitModal').classList.remove('hidden');
+        }
+
+        function closeSubmitModal() {
+            playSound('jump');
+            document.getElementById('submitModal').classList.add('hidden');
+        }
+
+        function handleFilePreview(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreviewElement').src = e.target.result;
+                    document.getElementById('imagePreviewBox').classList.remove('hidden');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function handleStudentWorkSubmit(e) {
+            e.preventDefault();
+            if (needsInternet()) return;
+            const btn = document.getElementById('btnSubmitWorkModal');
+            btn.disabled = true;
+            btn.innerText = "SEDANG MUAT NAIK GAMBAR KE GOOGLE DRIVE...";
+
+            const taskId = document.getElementById('modalTaskId').value;
+            const note = document.getElementById('studentNoteInput').value;
+            const fileInput = document.getElementById('studentFileInput');
+
+            let base64Data = '';
+            let fileName = '';
+
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                fileName = `${activeStudent.class}_${activeStudent.name}_${Date.now()}.jpg`;
+                base64Data = await convertFileToBase64(file);
+            }
+
+            const now = new Date();
+            const timeStr = malaysiaTimestamp(now);
+
+            const subPayload = {
+                action: 'addSubmission',
+                id: "SUB-" + Date.now(),
+                taskId: taskId,
+                studentClass: activeStudent.class,
+                studentName: activeStudent.name,
+                submitDate: timeStr,
+                note: note,
+                fileData: base64Data,
+                fileName: fileName
+            };
+
+            await sendToAppsScript(subPayload);
+
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> HANTAR KEPADA CIKGU HERYANI`;
+
+            closeSubmitModal();
+            fetchDataFromAppsScript();
+
+            playSound('stageclear');
+            document.getElementById('successCelebrationModal').classList.remove('hidden');
+        }
+
+        function convertFileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    let encoded = reader.result.replace(/^data:(.*,)?/, '');
+                    if ((encoded.length % 4) > 0) {
+                        encoded += '='.repeat(4 - (encoded.length % 4));
+                    }
+                    resolve(encoded);
+                };
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        function closeSuccessModal() {
+            playSound('jump');
+            document.getElementById('successCelebrationModal').classList.add('hidden');
+        }
+
+        // GURU LOGIN & CREATION
+        function handleGuruLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('guruPasswordInput').value;
+            if (pass === TEACHER_PASSWORD) {
+                playSound('stageclear');
+                isGuruLoggedIn = true;
+                document.getElementById('guruLockScreen').classList.add('hidden');
+                document.getElementById('guruDashboard').classList.remove('hidden');
+                document.getElementById('loginErrorMsg').classList.add('hidden');
+                renderGuruReviewList();
+            } else {
+                playSound('jump');
+                document.getElementById('loginErrorMsg').classList.remove('hidden');
+            }
+        }
+
+        function lockGuruSession() {
+            isGuruLoggedIn = false;
+            document.getElementById('guruPasswordInput').value = '';
+            document.getElementById('guruLockScreen').classList.remove('hidden');
+            document.getElementById('guruDashboard').classList.add('hidden');
+        }
+
+        function switchGuruSubTab(subTab) {
+            playSound('jump');
+            if (subTab === 'create') {
+                document.getElementById('guruSectionCreate').classList.remove('hidden');
+                document.getElementById('guruSectionReview').classList.add('hidden');
+            } else {
+                document.getElementById('guruSectionCreate').classList.add('hidden');
+                document.getElementById('guruSectionReview').classList.remove('hidden');
+                renderGuruReviewList();
+            }
+        }
+
+        async function handleCreateTask(e) {
+            e.preventDefault();
+            if (needsInternet()) return;
+            const btn = document.getElementById('btnSubmitTask');
+            btn.disabled = true;
+            btn.innerText = "MENYIMPANKAN KE GOOGLE SHEET...";
+
+            const newTask = {
+                id: "TASK-" + Date.now(),
+                date: document.getElementById('taskDate').value,
+                subject: document.getElementById('taskSubject').value,
+                targetClass: document.getElementById('taskClass').value,
+                title: document.getElementById('taskTitle').value,
+                digitalLink: document.getElementById('taskDigitalLink').value,
+                bookInstructions: document.getElementById('taskBookInstructions').value,
+                notes: document.getElementById('taskNotes').value
+            };
+
+            await sendToAppsScript({ action: 'addTask', task: newTask });
+
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> TERBITKAN TUGASAN KE GOOGLE SHEET`;
+
+            playSound('stageclear');
+
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDigitalLink').value = '';
+            document.getElementById('taskBookInstructions').value = '';
+            document.getElementById('taskNotes').value = '';
+
+            alertModal("TUGASAN DITERBITKAN! 🍄", "Tugasan berjaya disimpan dalam Google Sheet dan diterbitkan!");
+            fetchDataFromAppsScript();
+        }
+
+        function renderGuruReviewList() {
+            const container = document.getElementById('guruReviewContainer');
+            if (!container) return;
+
+            const selectedClassFilter = document.getElementById('reviewClassFilter').value;
+
+            let filteredSubmissions = submissions;
+            if (selectedClassFilter !== 'ALL') {
+                filteredSubmissions = submissions.filter(s => s.studentClass === selectedClassFilter);
+            }
+
+            const unratedCount = submissions.filter(s => !s.stars || s.stars === 0).length;
+            document.getElementById('pendingGradeCount').innerText = unratedCount;
+
+            if (filteredSubmissions.length === 0) {
+                container.innerHTML = `
+                    <div class="mario-card p-8 text-center text-gray-600 bg-white">
+                        <i class="fa-solid fa-box-open text-4xl text-mario-yellow mb-2"></i>
+                        <p class="font-bold">Tiada penghantaran murid lagi untuk disemak.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+
+            filteredSubmissions.forEach(sub => {
+                const parentTask = tasks.find(t => t.id === sub.taskId);
+
+                const card = document.createElement('div');
+                card.className = "mario-card p-5 bg-white border-3 border-mario-dark space-y-3";
+
+                card.innerHTML = `
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 pb-2 border-b-2 border-mario-dark">
+                        <div>
+                            <span class="px-3 py-1 rounded-lg bg-mario-yellow text-mario-dark text-xs font-bold border border-mario-dark">
+                                <i class="fa-solid fa-user-ninja"></i> ${sub.studentName} (${sub.studentClass})
+                            </span>
+                            <h4 class="mario-font text-xs text-mario-red mt-2">${parentTask ? parentTask.title : 'Tugasan'}</h4>
+                        </div>
+                        <span class="text-xs text-gray-600 font-bold"><i class="fa-solid fa-clock"></i> ${formatDateTimeMY(sub.submitDate)}</span>
+                    </div>
+
+                    <div class="bg-yellow-50 p-3 rounded-xl border-2 border-mario-dark space-y-2 text-xs">
+                        <p><strong>Catatan/Jawapan Murid:</strong> ${sub.note || '-'}</p>
+                        ${sub.imageUrl ? `<p><a href="${sub.imageUrl}" target="_blank" class="text-blue-600 font-bold underline"><i class="fa-solid fa-image"></i> Buka Gambar Bukti Kerja Dalam Google Drive</a></p>` : ''}
+                    </div>
+
+                    <div class="bg-green-50 p-4 rounded-xl border-2 border-mario-dark space-y-3">
+                        <p class="text-xs font-bold text-mario-dark flex items-center gap-1">
+                            <i class="fa-solid fa-star text-yellow-500"></i> Berikan Bintang & Ulasan Guru:
+                        </p>
+
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-gray-800">Skala Bintang:</span>
+                            <div class="flex gap-1 text-2xl cursor-pointer" id="starContainer-${sub.id}">
+                                ${[1, 2, 3, 4, 5].map(starNum => `
+                                    <i onclick="setStarRating('${sub.id}', ${starNum})" class="fa-star ${starNum <= (sub.stars || 0) ? 'fa-solid text-yellow-400' : 'fa-regular text-gray-300'} transition hover:scale-125"></i>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <input type="text" id="feedbackInput-${sub.id}" value="${sub.feedback || ''}" placeholder="Pujian untuk murid..." class="w-full px-4 py-2 rounded-lg border-2 border-mario-dark text-xs font-semibold outline-none bg-white">
+                            <button onclick="saveGrade('${sub.id}')" class="mario-btn-yellow px-4 py-2 rounded-xl text-xs font-bold shrink-0">
+                                <i class="fa-solid fa-floppy-disk"></i> SIMPAN
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function setStarRating(subId, rating) {
+            playSound('star');
+            const sub = submissions.find(s => s.id === subId);
+            if (sub) {
+                sub.stars = rating;
+                renderGuruReviewList();
+            }
+        }
+
+        async function saveGrade(subId) {
+            if (needsInternet()) return;
+            const sub = submissions.find(s => s.id === subId);
+            if (sub) {
+                const feedbackVal = document.getElementById(`feedbackInput-${subId}`).value;
+                sub.feedback = feedbackVal;
+
+                await sendToAppsScript({
+                    action: 'updateGrade',
+                    submissionId: sub.id,
+                    stars: sub.stars,
+                    feedback: sub.feedback
+                });
+
+                playSound('stageclear');
+                alertModal("PENILAIAN DISIMPAN! 🌟", `Bintang untuk ${sub.studentName} disimpan!`);
+                fetchDataFromAppsScript();
+            }
+        }
+
+        // REKOD & EXPORT CSV
+        function handleRekodLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('rekodPasswordInput').value;
+            if (pass === TEACHER_PASSWORD) {
+                playSound('stageclear');
+                isRekodLoggedIn = true;
+                document.getElementById('rekodLockScreen').classList.add('hidden');
+                document.getElementById('rekodDashboard').classList.remove('hidden');
+                document.getElementById('rekodLoginErrorMsg').classList.add('hidden');
+                renderRekodDashboard();
+            } else {
+                playSound('jump');
+                document.getElementById('rekodLoginErrorMsg').classList.remove('hidden');
+            }
+        }
+
+        function renderRekodDashboard() {
+            document.getElementById('statTotalTasks').innerText = tasks.length;
+            document.getElementById('statTotalSubmissions').innerText = submissions.length;
+            
+            const totalStars = submissions.reduce((acc, curr) => acc + (curr.stars || 0), 0);
+            document.getElementById('statTotalStars').innerText = `${totalStars} ⭐`;
+
+            const tbody = document.getElementById('rekodTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+
+            tasks.forEach(task => {
+                const subCount = submissions.filter(s => s.taskId === task.id).length;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-yellow-50 transition border-b border-gray-200";
+
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-gray-800">${formatDateMY(task.date)}</td>
+                    <td class="p-3 font-bold text-mario-red">${task.subject}</td>
+                    <td class="p-3 font-bold text-blue-600">${task.targetClass}</td>
+                    <td class="p-3 font-bold text-gray-900">${task.title}</td>
+                    <td class="p-3 font-bold text-green-600">${subCount} murid</td>
+                    <td class="p-3 text-center">
+                        <button onclick="deleteTask('${task.id}')" class="p-1.5 rounded-lg bg-mario-red text-white hover:brightness-110 text-xs font-bold border border-mario-dark" title="Padam Tugasan">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function deleteTask(taskId) {
+            if (needsInternet()) return;
+            playSound('jump');
+            if (confirm("Adakah anda pasti mahu memadam tugasan ini dari Google Sheet?")) {
+                await sendToAppsScript({ action: 'deleteTask', taskId: taskId });
+                fetchDataFromAppsScript();
+            }
+        }
+
+        function exportToCSV() {
+            playSound('coin');
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "ID Tugasan,Tarikh,Subjek,Kelas,Tajuk,Nama Murid,Masa Hantar,Bintang,Ulasan\n";
+
+            submissions.forEach(sub => {
+                const task = tasks.find(t => t.id === sub.taskId);
+                const title = task ? `"${task.title.replace(/"/g, '""')}"` : 'Tugasan';
+                const subject = task ? task.subject : '';
+                const row = `"${sub.taskId}","${task ? formatDateMY(task.date) : ''}","${subject}","${sub.studentClass}","${title}","${sub.studentName}","${formatDateTimeMY(sub.submitDate)}","${sub.stars || 0}","${(sub.feedback || '').replace(/"/g, '""')}"`;
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Rekod_PDPR_Mario_${malaysiaDateKey(new Date())}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // APPS SCRIPT API SYNC
+        async function fetchDataFromAppsScript() {
+            document.getElementById('syncText').innerText = "MENYEMAK DATA...";
+            try {
+                const res = await fetch(`${APPSCRIPT_URL}?action=getData`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        tasks = data.tasks || [];
+                        submissions = data.submissions || [];
+
+                        renderStudentTaskList();
+                        if (isGuruLoggedIn) renderGuruReviewList();
+                        if (isRekodLoggedIn) renderRekodDashboard();
+
+                        document.getElementById('syncText').innerText = "LIVE SYNC ON";
+                        document.getElementById('syncBadge').className = "px-3 py-1.5 rounded-xl bg-mario-green text-white text-xs font-bold flex items-center gap-1 border-2 border-mario-dark shadow";
+                    }
+                }
+            } catch (e) {
+                console.error("Fetch error:", e);
+                document.getElementById('syncText').innerText = "OFFLINE MODE";
+                document.getElementById('syncBadge').className = "px-3 py-1.5 rounded-xl bg-mario-red text-white text-xs font-bold flex items-center gap-1 border-2 border-mario-dark shadow";
+            }
+        }
+
+        async function sendToAppsScript(payload) {
+            try {
+                await fetch(APPSCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } catch (e) {
+                console.error("Save error:", e);
+            }
+        }
+
+        function alertModal(title, message) {
+            const div = document.createElement('div');
+            div.className = "fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4";
+            div.innerHTML = `
+                <div class="mario-card bg-white max-w-sm w-full p-6 text-center animate-float">
+                    <div class="w-16 h-16 rounded-2xl bg-mario-yellow text-mario-dark border-3 border-mario-dark flex items-center justify-center text-3xl mx-auto mb-3">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h3 class="mario-font text-xs text-mario-red">${title}</h3>
+                    <p class="text-xs font-bold text-gray-700 mt-2">${message}</p>
+                    <button onclick="this.closest('.fixed').remove()" class="mario-btn-red mt-4 px-6 py-2.5 rounded-xl mario-font text-xs">
+                        OK, TERUSKAN
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(div);
+        }
+    </script>
+</body>
+</html>
