@@ -4,6 +4,8 @@ Pakej lengkap untuk GitHub Pages. Reka bentuk Mario dan sambungan Apps Script/Go
 
 ## Perubahan
 
+- Pautan `https://`, `http://` dan `www.` dalam **Latihan Buku / Tugasan Buku** boleh diklik dan dibuka dalam tab baharu. Beberapa pautan dalam satu arahan turut disokong, dan baris baharu dikekalkan.
+
 - Pilihan subjek dalam borang tugasan: **Sains, Pendidikan Kesihatan dan Pendidikan Jasmani**.
 
 - Gambar header cikgu dimasukkan dalam `assets/header-heryani.png`, mengekalkan nisbah asal supaya wajah dan tajuk tidak dipotong.

@@ -1,6 +1,6 @@
 'use strict';
 // Tukar VERSION apabila memuat naik keluaran baharu.
-const VERSION = '2026-10-13-v3-subjek';
+const VERSION = '2026-10-13-v4-pautan-buku';
 const CACHE_PREFIX = `super-pdpr-static:${self.registration.scope}:`;
 const CACHE_NAME = CACHE_PREFIX + VERSION;
 const APP_FILES = [

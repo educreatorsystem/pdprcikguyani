@@ -75,6 +75,10 @@
         .mario-font {
             font-family: 'Press Start 2P', cursive;
         }
+        .book-instructions { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.7; }
+        .book-instructions a { color: #00247D; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+        .book-instructions a:hover { color: #E52521; }
+        .book-instructions a:focus-visible { outline: 2px solid #00247D; outline-offset: 3px; border-radius: 3px; }
         .mario-card {
             background: #FFFFFF;
             border: 4px solid #1D1D1D;
@@ -850,6 +854,45 @@
             renderStudentTaskList();
         }
 
+        // Paparkan teks asal dengan selamat, dan aktifkan pautan HTTP/HTTPS sahaja.
+        function renderBookInstructions(value) {
+            const text = String(value == null ? '' : value);
+            const escape = s => s.replace(/[&<>"']/g, char => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[char]));
+            const pattern = /\b(?:https?:\/\/|www\.)[^\s<>"']+/gi;
+            let html = '';
+            let cursor = 0;
+            for (const match of text.matchAll(pattern)) {
+                html += escape(text.slice(cursor, match.index));
+                let label = match[0];
+                let suffix = '';
+                // Noktah ayat dan kurungan luar bukan sebahagian pautan.
+                while (/[.,!?;:]$/.test(label)) {
+                    suffix = label.slice(-1) + suffix;
+                    label = label.slice(0, -1);
+                }
+                const pairs = { ')': '(', ']': '[', '}': '{' };
+                while (pairs[label.slice(-1)]) {
+                    const closing = label.slice(-1);
+                    const opening = pairs[closing];
+                    const count = character => [...label].filter(c => c === character).length;
+                    if (count(closing) <= count(opening)) break;
+                    suffix = closing + suffix;
+                    label = label.slice(0, -1);
+                }
+                try {
+                    const url = new URL(/^www\./i.test(label) ? 'https://' + label : label);
+                    if (!['http:', 'https:'].includes(url.protocol) || !url.hostname) throw new Error('Invalid link');
+                    html += `<a href="${escape(url.href)}" target="_blank" rel="noopener noreferrer">${escape(label)}</a>${escape(suffix)}`;
+                } catch (_) {
+                    html += escape(match[0]);
+                }
+                cursor = match.index + match[0].length;
+            }
+            return html + escape(text.slice(cursor));
+        }
+
         // RENDER STUDENT TASKS
         function renderStudentTaskList() {
             const container = document.getElementById('studentTaskList');
@@ -905,7 +948,7 @@
                             <p class="text-xs font-bold text-mario-dark flex items-center gap-1.5 mb-1">
                                 <i class="fa-solid fa-book-open text-mario-red"></i> Latihan Buku:
                             </p>
-                            <p class="text-xs text-gray-800 font-semibold">${task.bookInstructions}</p>
+                            <p class="book-instructions text-xs text-gray-800 font-semibold">${renderBookInstructions(task.bookInstructions)}</p>
                         </div>
                     `;
                 }
