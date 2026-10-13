@@ -124,51 +124,99 @@
             background: #E52521;
             border: 2px solid #1D1D1D;
         }
+
+        /* Header bergambar: nisbah asal dikekalkan pada semua saiz skrin. */
+        .pdpr-header { padding: 20px 16px 10px; }
+        .hero-panel { max-width: 1120px; margin: 0 auto; overflow: hidden; border: 4px solid #172b53; border-radius: 26px; background: #0b2b65; box-shadow: 0 8px 0 rgba(20, 43, 88, .32), 0 20px 48px rgba(0, 36, 125, .2); }
+        .hero-art { position: relative; background: #36b3f5; }
+        .hero-art img { display: block; width: 100%; height: auto; aspect-ratio: 2048 / 682; }
+        .hero-art::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, transparent 73%, rgba(11,43,101,.16) 88%, #0b2b65 100%); }
+        .hero-toolbar { position: relative; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 12px 22px 20px; color: white; background: linear-gradient(180deg, #0b2b65, #103e83); }
+        .hero-caption { display: flex; align-items: center; gap: 12px; min-width: 0; }
+        .hero-star { width: 44px; height: 44px; flex-shrink: 0; display: grid; place-items: center; border: 2px solid rgba(252,209,22,.6); border-radius: 14px; background: rgba(252,209,22,.12); color: #FCD116; font-size: 21px; }
+        .hero-tagline { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.4; }
+        .hero-subtitle { margin: 2px 0 0; color: #cce9ff; font-size: 12px; line-height: 1.5; font-weight: 600; }
+        .hero-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; }
+        .hero-actions > button, .hero-actions #syncBadge { min-height: 38px; border-radius: 12px; font-size: 11px; padding: 8px 12px; box-shadow: 0 3px 0 rgba(0,0,0,.22); }
+        .hero-actions > button { transition: transform .16s ease, filter .16s ease; }
+        .hero-actions > button:hover { transform: translateY(-2px); filter: brightness(1.06); }
+        .hero-actions > button:active { transform: translateY(1px); }
+        .pdpr-nav { position: sticky; top: 0; z-index: 40; padding: 10px 16px 14px; background: rgba(92,148,252,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .pdpr-nav-inner { display: flex; gap: 12px; max-width: 1120px; margin: 0 auto; }
+        .pdpr-nav button { flex: 1 1 0; min-width: 0; justify-content: center; min-height: 52px; padding: 12px 14px; border: 3px solid #172b53; border-radius: 14px; box-shadow: 0 4px 0 rgba(20,43,88,.4); line-height: 1.65; }
+        .pdpr-nav button:hover { transform: translateY(-2px); }
+        .pdpr-nav button:active { transform: translateY(1px); }
+        .pdpr-nav button > i { flex-shrink: 0; font-size: 16px; }
+        .hero-actions button:focus-visible, .pdpr-nav button:focus-visible { outline: 3px solid white; outline-offset: 4px; }
+        .header-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+        @media (max-width: 700px) {
+            .pdpr-header { padding: 12px 10px 8px; }
+            .hero-panel { border-width: 3px; border-radius: 18px; }
+            .hero-toolbar { justify-content: center; gap: 12px; padding: 8px 12px 16px; }
+            .hero-caption { justify-content: center; width: 100%; }
+            .hero-tagline { font-size: 15px; }
+            .hero-subtitle { font-size: 11px; }
+            .hero-star { width: 36px; height: 36px; font-size: 17px; border-radius: 11px; }
+            .hero-actions { justify-content: center; gap: 7px; width: 100%; }
+            .hero-actions > button, .hero-actions #syncBadge { padding: 7px 9px; font-size: 10px; min-height: 36px; }
+            .pdpr-nav { padding: 8px 10px 12px; }
+            .pdpr-nav-inner { gap: 7px; }
+            .pdpr-nav button { padding: 9px 6px; min-height: 53px; font-size: 9px; gap: 6px; border-radius: 11px; border-width: 2px; }
+            .pdpr-nav button > i { font-size: 13px; }
+        }
+        @media (max-width: 380px) {
+            .hero-actions #syncBadge { flex-basis: 100%; justify-content: center; max-width: 235px; }
+            .pdpr-nav button { flex-direction: column; gap: 3px; font-size: 8px; padding: 8px 4px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-actions > button, .pdpr-nav button { transition: none; }
+            .hero-actions > button:hover, .pdpr-nav button:hover { transform: none; }
+        }
     </style>
 </head>
 <body class="text-gray-900 pb-12 selection:bg-yellow-300 selection:text-red-600">
 
-    <header class="sticky top-0 z-40 bg-mario-red border-b-4 border-mario-dark shadow-xl text-white">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('murid')">
-                <div class="w-14 h-14 rounded-2xl bg-mario-yellow border-4 border-mario-dark flex items-center justify-center text-mario-dark text-3xl shadow-md transform hover:rotate-6 transition-all">
-                    <i class="fa-solid fa-gamepad animate-bounce-mario"></i>
+    <header class="pdpr-header" aria-labelledby="pdprTitle">
+        <h1 id="pdprTitle" class="header-sr-only">PDPR Cikgu Heryani</h1>
+        <div class="hero-panel">
+            <div class="hero-art">
+                <img src="./assets/header-heryani.png" alt="PDPR Cikgu Heryani — dunia pengembaraan pembelajaran dengan buku dan bintang" width="2048" height="682" fetchpriority="high" decoding="async">
+            </div>
+            <div class="hero-toolbar">
+                <div class="hero-caption">
+                    <span class="hero-star" aria-hidden="true"><i class="fa-solid fa-star"></i></span>
+                    <div>
+                        <p class="hero-tagline">Jom mulakan pengembaraan ilmu!</p>
+                        <p class="hero-subtitle">Belajar &bull; Siapkan tugasan &bull; Raih bintang</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="mario-font text-lg md:text-xl text-yellow-300 drop-shadow-[2px_2px_0px_#1D1D1D]">
-                        SUPER PDPR 🍄
-                    </h1>
-                    <p class="text-xs font-bold text-white flex items-center gap-1 mt-1">
-                        <i class="fa-solid fa-coins text-yellow-300"></i> CIKGU HERYANI WORLD 1-1
-                    </p>
+                <div class="hero-actions">
+                    <button id="installAppButton" onclick="installPDPRApp()" class="rounded-xl bg-white text-mario-red font-bold border-2 border-mario-dark">
+                        <i class="fa-solid fa-download" aria-hidden="true"></i> PASANG APP
+                    </button>
+                    <button id="soundToggleBtn" onclick="toggleSound()" class="rounded-xl bg-mario-yellow text-mario-dark font-bold border-2 border-mario-dark flex items-center gap-1.5">
+                        <i id="soundIcon" class="fa-solid fa-volume-high" aria-hidden="true"></i> <span id="soundText">BUNYI: ON</span>
+                    </button>
+                    <div id="syncBadge" role="status" aria-live="polite" class="rounded-xl bg-green-500 text-white font-bold flex items-center gap-1 border-2 border-mario-dark">
+                        <i id="syncIcon" class="fa-solid fa-cloud-arrow-down animate-pulse" aria-hidden="true"></i> <span id="syncText">MENGAMBIL DATA...</span>
+                    </div>
                 </div>
             </div>
-
-            <div class="flex flex-wrap justify-center items-center gap-2">
-                <button id="installAppButton" onclick="installPDPRApp()" class="px-3 py-1.5 rounded-xl bg-white text-mario-red text-xs font-bold border-2 border-mario-dark shadow">
-                    <i class="fa-solid fa-download"></i> PASANG APP
-                </button>
-                <button id="soundToggleBtn" onclick="toggleSound()" class="px-3 py-1.5 rounded-xl bg-mario-yellow text-mario-dark text-xs font-bold border-2 border-mario-dark flex items-center gap-1.5 shadow">
-                    <i id="soundIcon" class="fa-solid fa-volume-high"></i> <span id="soundText">BUNYI: ON</span>
-                </button>
-                <div id="syncBadge" class="px-3 py-1.5 rounded-xl bg-green-500 text-white text-xs font-bold flex items-center gap-1 border-2 border-mario-dark shadow">
-                    <i id="syncIcon" class="fa-solid fa-cloud-arrow-down animate-pulse"></i> <span id="syncText">MENGAMBIL DATA...</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="max-w-6xl mx-auto px-4 mt-2 flex justify-center md:justify-start gap-2 overflow-x-auto pb-2">
-            <button id="tabBtnMurid" onclick="switchTab('murid')" class="mario-font text-xs px-5 py-3 rounded-t-xl font-bold transition-all flex items-center gap-2 bg-mario-yellow text-mario-dark border-2 border-b-0 border-mario-dark">
-                <i class="fa-solid fa-user-ninja"></i> SAYA MURID
-            </button>
-            <button id="tabBtnGuru" onclick="switchTab('guru')" class="mario-font text-xs px-5 py-3 rounded-t-xl font-bold transition-all flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 border-2 border-b-0 border-mario-dark">
-                <i class="fa-solid fa-crown text-yellow-300"></i> GURU 🔒
-            </button>
-            <button id="tabBtnRekod" onclick="switchTab('rekod')" class="mario-font text-xs px-5 py-3 rounded-t-xl font-bold transition-all flex items-center gap-2 bg-mario-green text-white hover:bg-green-700 border-2 border-b-0 border-mario-dark">
-                <i class="fa-solid fa-clipboard-check"></i> REKOD TUGASAN 🔒
-            </button>
         </div>
     </header>
+    <nav class="pdpr-nav" aria-label="Modul sistem PdPR">
+        <div class="pdpr-nav-inner">
+            <button id="tabBtnMurid" type="button" aria-pressed="true" onclick="switchTab('murid')" class="mario-font text-xs font-bold transition-all flex items-center gap-2 bg-mario-yellow text-mario-dark">
+                <i class="fa-solid fa-user-ninja" aria-hidden="true"></i> <span>SAYA MURID</span>
+            </button>
+            <button id="tabBtnGuru" type="button" aria-pressed="false" onclick="switchTab('guru')" class="mario-font text-xs font-bold transition-all flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700">
+                <i class="fa-solid fa-crown text-yellow-300" aria-hidden="true"></i> <span>GURU 🔒</span>
+            </button>
+            <button id="tabBtnRekod" type="button" aria-pressed="false" onclick="switchTab('rekod')" class="mario-font text-xs font-bold transition-all flex items-center gap-2 bg-mario-green text-white hover:bg-green-700">
+                <i class="fa-solid fa-clipboard-check" aria-hidden="true"></i> <span>REKOD TUGASAN 🔒</span>
+            </button>
+        </div>
+    </nav>
 
     <div id="offlineNotice" hidden role="status" class="connection-notice">
         Tiada internet. Sambungkan internet untuk memuatkan data dan menghantar tugasan.
@@ -331,15 +379,9 @@
                                 </label>
                                 <select id="taskSubject" required class="w-full px-4 py-2.5 rounded-xl border-2 border-mario-dark text-xs font-bold outline-none bg-white">
                                     <option value="">-- Pilih Subjek --</option>
-                                    <option value="Bahasa Melayu">Bahasa Melayu</option>
-                                    <option value="Bahasa Inggeris">Bahasa Inggeris</option>
-                                    <option value="Matematik">Matematik</option>
                                     <option value="Sains">Sains</option>
-                                    <option value="Pendidikan Islam">Pendidikan Islam</option>
-                                    <option value="Pendidikan Moral">Pendidikan Moral</option>
-                                    <option value="Pendidikan Seni Visual">Pendidikan Seni Visual</option>
-                                    <option value="Reka Bentuk & Teknologi">Reka Bentuk & Teknologi</option>
-                                    <option value="Sejarah">Sejarah</option>
+                                    <option value="Pendidikan Kesihatan">Pendidikan Kesihatan</option>
+                                    <option value="Pendidikan Jasmani">Pendidikan Jasmani</option>
                                 </select>
                             </div>
 
@@ -778,6 +820,10 @@
 
         function switchTab(tab) {
             playSound('jump');
+            ['murid', 'guru', 'rekod'].forEach(name => {
+                const id = 'tabBtn' + name.charAt(0).toUpperCase() + name.slice(1);
+                document.getElementById(id).setAttribute('aria-pressed', String(tab === name));
+            });
             document.getElementById('tabContentMurid').classList.add('hidden');
             document.getElementById('tabContentGuru').classList.add('hidden');
             document.getElementById('tabContentRekod').classList.add('hidden');

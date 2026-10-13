@@ -4,6 +4,13 @@ Pakej lengkap untuk GitHub Pages. Reka bentuk Mario dan sambungan Apps Script/Go
 
 ## Perubahan
 
+- Pilihan subjek dalam borang tugasan: **Sains, Pendidikan Kesihatan dan Pendidikan Jasmani**.
+
+- Gambar header cikgu dimasukkan dalam `assets/header-heryani.png`, mengekalkan nisbah asal supaya wajah dan tajuk tidak dipotong.
+- Header dipadankan dengan panel kawalan biru, sudut bulat dan menu yang sesuai pada telefon serta komputer.
+- Butang Pasang App, Bunyi, Murid, Guru dan Rekod Tugasan dikekalkan. Menu modul kekal mudah dicapai apabila menatal halaman.
+- Versi cache PWA telah dinaikkan supaya gambar header dimuatkan bersama keluaran baharu.
+
 - Tarikh dalam kad tugasan murid: **DD/MM/YYYY**, contohnya **13/10/2026**.
 - Tarikh panjang daripada Google Sheets yang mengandungi nama zon waktu diproses semula; nama zon tidak dipaparkan.
 - Semua penukaran cap masa, tarikh hari ini dan masa penghantaran menggunakan **Asia/Kuala_Lumpur (UTC+8)**.
@@ -12,6 +19,10 @@ Pakej lengkap untuk GitHub Pages. Reka bentuk Mario dan sambungan Apps Script/Go
 - PWA dengan manifest, service worker, ikon 192/512, ikon maskable, ikon iPhone dan butang **PASANG APP**.
 - Fail gaya, fon dan ikon disertakan untuk paparan asas tanpa internet selepas lawatan pertama berjaya.
 - Banner tiada internet dan pemberitahuan kemas kini aplikasi.
+
+## Kemas kini sistem yang telah diterbitkan
+
+Muat naik semua kandungan pakej ini ke repository yang sama dan gantikan fail lama. Gambar header disertakan dalam folder `assets`; pastikan folder itu turut dimuat naik. **Apps Script tidak perlu digantikan.** Selepas penerbitan selesai, buka semula URL sistem dan tekan **Kemas kini aplikasi** jika notis muncul. Jika masih kelihatan header lama, muat semula halaman.
 
 ## Muat naik ke GitHub
 

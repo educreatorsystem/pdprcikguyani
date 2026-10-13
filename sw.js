@@ -1,11 +1,11 @@
 'use strict';
 // Tukar VERSION apabila memuat naik keluaran baharu.
-const VERSION = '2026-10-13-v1';
+const VERSION = '2026-10-13-v3-subjek';
 const CACHE_PREFIX = `super-pdpr-static:${self.registration.scope}:`;
 const CACHE_NAME = CACHE_PREFIX + VERSION;
 const APP_FILES = [
     './', './index.html', './date-my.js', './pwa.js', './manifest.webmanifest',
-    './assets/tailwind.js', './assets/fontawesome.css', './assets/fonts.css',
+    './assets/header-heryani.png', './assets/tailwind.js', './assets/fontawesome.css', './assets/fonts.css',
     './assets/font-0.ttf', './assets/font-1.ttf', './assets/font-2.ttf', './assets/font-3.ttf',
     './assets/webfonts/fa-solid-900.woff2', './assets/webfonts/fa-solid-900.ttf',
     './assets/webfonts/fa-regular-400.woff2', './assets/webfonts/fa-regular-400.ttf',
